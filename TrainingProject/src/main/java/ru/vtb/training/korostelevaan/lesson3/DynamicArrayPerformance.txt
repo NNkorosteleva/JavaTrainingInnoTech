@@ -1,0 +1,18 @@
+-------- Addition to the end --------
+DynamicArray.add(Object e): 8 ms
+ArrayList.add(Object e): 5 ms
+DynamicArray.add(int i, Object e) in begin: 7028 ms
+ArrayList.add(int i, Object e) in begin: 6914 ms
+DynamicArray.add(int i, Object e) in middle: 11632 ms
+ArrayList.add(int i, Object e) in middle: 13214 ms
+DynamicArray.add(int i, Object e) in end: 16 ms
+ArrayList.add(int i, Object e) in end: 11 ms
+DynamicArray.remove(Object e): 2292 ms
+ArrayList.remove(Object e): 2191 ms
+DynamicArray.remove(int i) in begin: 12470 ms
+ArrayList.remove(int i) in begin: 12420 ms
+DynamicArray.remove(int i) in middle: 6876 ms
+ArrayList.remove(int i) in middle: 6870 ms
+DynamicArray.remove(int i) in end: 7 ms
+ArrayList.remove(int i) in end: 3 ms
+-------- etc -------
