@@ -1,0 +1,54 @@
+1. convert decimal 97 in systems below, then convert back with sum representation
+   a) bin = 0b110_0001 
+   b) oct = 014_1
+   c) hex = 0x61
+
+2. convert 115 in bin of size 1,2,4,8 byte. split representation by octets
+    size 1 byte) 0b0111_0011
+    size 2 byte) 0b0000_0000_0111_0011
+    size 4 byte) 0b0000_0000_0000_0000_0000_0000_0111_0011
+    size 8 byte) 0b0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0111_0011
+
+3. convert -1, -115 in bin of size 1,2,4,8 byte
+    -1 size 1 byte) 0b1111_1111
+    -1 size 2 byte) 0b1111_1111_1111_1111
+    -1 size 4 byte) 0b1111_1111_1111_1111_1111_1111_1111_1111
+    -1 size 8 byte) 0b1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111
+
+    -115 size 1 byte) 0b1000_1101
+    -115 size 2 byte) 0b1111_1111_1000_1101
+    -115 size 4 byte) 0b1111_1111_1111_1111_1111_1111_1000_1101
+    -115 size 8 byte) 0b1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1000_1101
+
+4. add (in column)
+   bin: 101010 + 100111 = 0b0101_0001
+   oct: 765 + 234 = 012_21
+   hex: CAFE + BABE = 0x0001_85BC
+
+5. subtract (in column)
+   bin: 10000 - 10 = 0b1110
+   oct: 456 - 367 = 067
+   hex: ABABE - CAFE = 0x0009_EFC0
+
+8. write conclusion (in txt file), how type extension occurs in case of positives and negatives.
+В случае положительного результата происходит расширение типа. Это означает, что осуществляется переход от менее емкого типа к более емкому.
+Например от byte (длина 1 байт) к типу int (длина 4 байта). Такие преобразования безопасны в том смысле, что не происходит потери данных. 
+такие расширения компилятор осуществляет сам, незаметно для разработчика.
+В случае отрицательного результата происходит сужение типа. Это означает переход от более емкого типа к менее емкому.  При таком преобразовании есть риск потерять данные.
+Например если число int больше 127, а мы его приводим к byte, то значения битов старше восьмого будут потеряны.
+
+9. will next (in txt file) statements compile?
+1) byte b = 100 OK. т к 100 входит в интервал допустимых значений byte [-128; 127]
+2) byte b = 100L NO OK т к L символ, обозначающий тип long. Нужно либо убрать L оставить только 100, тогда b=100 или привести 100L к типу byte: (byte) 100L
+3) int i = 100L NO OK т к L символ, обозначающий тип long. Нужно либо убрать L оставить только 100, тогда i=100 или привести 100L к типу byte: (int) 100L
+if not, write how to fix it
+
+10. solve this task (in txt file) only after you completely understand types extension. don't run code unless you have 100% explanation of the result!
+	what will be the output (int)(char)(byte)-1 ? 
+	write step by step explanation of expression calculation
+(byte) -1 > 0b1111_1111 (8 бит)
+(char)(byte)-1 расширение типа с точки зрения битов (16 бит) 0b1111_1111_1111_1111 char тип беззнаковое «число»
+Преобразование в char сужается, но не расширяется до знака.
+(int)(char)(byte)-1 расширение типа (32 бит) но без учета знака 0b0000_0000_0000_0000_1111_1111_1111_1111 = 65_535
+
+(int)(char)(byte)-1 = 65_535
