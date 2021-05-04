@@ -1,0 +1,18 @@
+-------- Addition to the end --------
+DoublyLinkedList.add(Object e): 4 ms
+LinkedList.add(Object e): 5 ms
+DoublyLinkedList.add(int i, Object e) in begin: 6 ms
+LinkedList.add(int i, Object e) in begin: 7 ms
+DoublyLinkedList.add(int i, Object e) in middle: 20 ms
+LinkedList.add(int i, Object e) in middle: 21 ms
+DoublyLinkedList.add(int i, Object e) in end: 8 ms
+LinkedList.add(int i, Object e) in end: 5 ms
+DoublyLinkedList.remove(Object e): 7 ms
+LinkedList.remove(Object e): 35018 ms
+DoublyLinkedList.remove(int i) in begin: 4 ms
+LinkedList.remove(int i) in begin: 2 ms
+DoublyLinkedList.remove(int i) in middle: 17 ms
+LinkedList.remove(int i) in middle: 20 ms
+DoublyLinkedList.remove(int i) in end: 6 ms
+LinkedList.remove(int i) in end: 3 ms
+-------- etc -------

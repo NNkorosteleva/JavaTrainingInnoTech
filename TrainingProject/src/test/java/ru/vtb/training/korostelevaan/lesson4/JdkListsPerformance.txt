@@ -1,0 +1,18 @@
+-------- Addition to the end --------
+ArrayList.add(Object e): 7 ms
+LinkedList.add(Object e): 6 ms
+ArrayList.add(int i, Object e) in begin: 1995 ms
+LinkedList.add(int i, Object e) in begin: 5 ms
+ArrayList.add(int i, Object e) in middle: 3120 ms
+LinkedList.add(int i, Object e) in middle: 21 ms
+ArrayList.add(int i, Object e) in end: 9 ms
+LinkedList.add(int i, Object e) in end: 3 ms
+ArrayList.remove(Object e): 68376 ms
+LinkedList.remove(Object e): 70847 ms
+ArrayList.remove(int i) in begin: 3065 ms
+LinkedList.remove(int i) in begin: 2 ms
+ArrayList.remove(int i) in middle: 1847 ms
+LinkedList.remove(int i) in middle: 14 ms
+ArrayList.remove(int i) in end: 4 ms
+LinkedList.remove(int i) in end: 3 ms
+-------- etc -------
