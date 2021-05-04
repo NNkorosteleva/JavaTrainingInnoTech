@@ -196,6 +196,15 @@ public class DynamicArray {
     }
 
     /**
+     * Создает итератор массива
+     *
+     * @return итератор массива
+     */
+    public ListIteratorImpl listIterator() {
+        return new DynamicArray.ListIteratorImpl(data);
+    }
+
+    /**
      * Проверка входного индекса массива не выходит ли за границы массива
      *
      * @param index - индекс массива
@@ -216,34 +225,47 @@ public class DynamicArray {
      */
     private Object[] grow() {
         Object[] temp = data.clone();
-        data = new Object[(int) Math.round(1.5 * size())];
+        data = (Object[]) new Object[(int) Math.round(1.5 * size())];
         System.arraycopy(temp, 0, data, 0, temp.length);
         return data;
     }
 
-    public ListIterator listIterator() {
-        return new DynamicArray.ListIterator(data);
-    }
-
-    private class ListIterator implements java.util.ListIterator {
+    /**
+     * Класс итератор, который позволяет перемещаться по массиву в любом направлении,
+     * изменять список во время итерации и получать текущую позицию итератора в массиве.
+     */
+    private class ListIteratorImpl implements java.util.ListIterator {
         private Object[] data;
         private int currentIndexIterator;
         private int expectedCurrentIndex = currentIndex;
+        private DynamicArray dynamicArray = DynamicArray.this;
 
-        ListIterator(Object[] data) {
+        ListIteratorImpl(Object[] data) {
             this.data = data;
         }
 
+        /**
+         * Возвращает true, если следующий элемент массива не null при обходе массива в прямом направлении
+         *
+         * @return true если следующий элемент массива не null, false если элемент null
+         */
         @Override
         public boolean hasNext() {
             return currentIndexIterator < data.length;
         }
 
+        /**
+         * Возвращает следующий элемента массива и передвигает вправо курсор массива
+         *
+         * @return следующий элемент массива
+         * @throws ConcurrentModificationException если список был модифицирован вне итератора
+         * @throws ArrayIndexOutOfBoundsException  если i выходит за границы списка
+         */
         @Override
         public Object next() {
             checkForModification();
             int i = currentIndexIterator;
-            if ((i > data.length) && (i < 0)) {
+            if ((i > data.length) || (i < 0)) {
                 throw new ArrayIndexOutOfBoundsException();
             }
             if (i < data.length) {
@@ -252,16 +274,28 @@ public class DynamicArray {
             return data[i];
         }
 
+        /**
+         * Возвращает true, если предыдущий элемент массива не null при обходе массива в обратном направлении
+         *
+         * @return true если предыдущий элемент массива не null, false если элемент null
+         */
         @Override
         public boolean hasPrevious() {
             return currentIndexIterator > 0;
         }
 
+        /**
+         * Возвращает предыдущий элемента массива и передвигает влево курсор массива
+         *
+         * @return предыдущее значение элемента списка
+         * @throws ConcurrentModificationException если список был модифицирован вне итератора
+         * @throws ArrayIndexOutOfBoundsException  если i выходит за границы списка
+         */
         @Override
         public Object previous() {
             checkForModification();
             int i = currentIndexIterator - 1;
-            if ((i > data.length) && (i < 0)) {
+            if ((i > data.length) || (i < 0)) {
                 throw new ArrayIndexOutOfBoundsException();
             }
             if (i >= 0) {
@@ -270,51 +304,84 @@ public class DynamicArray {
             return data[i];
         }
 
+        /**
+         * Возвращает индекс следующего элемента
+         *
+         * @return индекс следующего элемента
+         */
         @Override
         public int nextIndex() {
             return currentIndexIterator;
         }
 
+        /**
+         * Возвращает индекс предыдущего элемента
+         *
+         * @return индекс предыдущего элемента
+         */
         @Override
         public int previousIndex() {
             return currentIndexIterator - 1;
         }
 
+        /**
+         * Удаляет из массива последний элемент
+         *
+         * @throws ConcurrentModificationException если массив был модифицирован вне итератора
+         * @throws ArrayIndexOutOfBoundsException  если currentIndex выходит за границы массива
+         */
         @Override
         public void remove() {
             checkForModification();
             if (currentIndex < 0) {
-                throw new IndexOutOfBoundsException();
+                throw new ArrayIndexOutOfBoundsException();
             }
             DynamicArray.this.remove(currentIndex - 1);
             expectedCurrentIndex = currentIndex;
             data = DynamicArray.this.data;
         }
 
+        /**
+         * Заменяет в массиве последний элемент
+         *
+         * @param o значение элемента
+         * @throws ConcurrentModificationException если список был модифицирован вне итератора
+         * @throws ArrayIndexOutOfBoundsException  если currentIndex выходит за границы массива
+         */
         @Override
         public void set(Object o) {
             checkForModification();
             if (currentIndex < 0) {
-                throw new IndexOutOfBoundsException();
+                throw new ArrayIndexOutOfBoundsException();
             }
-            DynamicArray.this.set(currentIndex - 1, o);
+            dynamicArray.set(currentIndex - 1, o);
             expectedCurrentIndex = currentIndex;
             data = DynamicArray.this.data;
         }
 
+        /**
+         * Добавляет в массив последний элемент
+         *
+         * @param o значение элемента
+         * @throws ConcurrentModificationException если список был модифицирован вне итератора
+         */
         @Override
         public void add(Object o) {
             checkForModification();
-            DynamicArray.this.add(o);
+            dynamicArray.add(o);
             expectedCurrentIndex = currentIndex;
             data = DynamicArray.this.data;
         }
 
+        /**
+         * Проверка модификации массива вне итератора
+         *
+         * @throws ConcurrentModificationException если массив был модифицирован вне итератора
+         */
         private void checkForModification() {
             if (expectedCurrentIndex != currentIndex) {
                 throw new ConcurrentModificationException();
             }
         }
-
     }
 }
