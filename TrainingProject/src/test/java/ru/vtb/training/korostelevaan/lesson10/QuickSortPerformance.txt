@@ -1,0 +1,11 @@
+-------- Addition to the end --------
+QuickSort.sort() for sort array: 182 ms
+Arrays.sort() for sort array: 19 ms
+Collections.sort() for sort array: 1439 ms
+QuickSort.sort() for worst case: 140 ms
+Arrays.sort() for worst case: 17 ms
+Collections.sort() for worst case: 2686 ms
+QuickSort.sort() for random: 856 ms
+Arrays.sort() for random: 586 ms
+Collections.sort() for random: 11516 ms
+-------- etc -------
