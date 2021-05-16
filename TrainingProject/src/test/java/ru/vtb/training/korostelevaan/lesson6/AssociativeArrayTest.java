@@ -6,14 +6,14 @@ import org.junit.jupiter.api.Test;
 
 class AssociativeArrayTest {
 
-    AssociativeArray<Integer,String> associativeArray = new AssociativeArray<>();
+    AssociativeArray<Integer, String> associativeArray = new AssociativeArray<>();
 
     @BeforeEach
     void setUp() {
-        associativeArray.add(0,"0");
-        associativeArray.add(1,"1");
-        associativeArray.add(16,"16");
-        associativeArray.add(2,"2");
+        associativeArray.add(0, "0");
+        associativeArray.add(1, "1");
+        associativeArray.add(16, "16");
+        associativeArray.add(2, "2");
     }
 
     @Test
@@ -21,7 +21,7 @@ class AssociativeArrayTest {
         int capacity = -5;
         String msg = "Specified initial capacity is negative: " + capacity;
         try {
-            AssociativeArray<Integer,String> array = new AssociativeArray<>(capacity);
+            AssociativeArray<Integer, String> array = new AssociativeArray<>(capacity);
             Assert.fail(msg);
         } catch (Exception e) {
             Assert.assertEquals(msg, e.getMessage());
@@ -33,7 +33,7 @@ class AssociativeArrayTest {
         float loadFactor = -5;
         String msg = "Specified loadFactor is incorrect: " + loadFactor;
         try {
-            AssociativeArray<Integer,String> array = new AssociativeArray<>(0, loadFactor);
+            AssociativeArray<Integer, String> array = new AssociativeArray<>(0, loadFactor);
             Assert.fail(msg);
         } catch (Exception e) {
             Assert.assertEquals(msg, e.getMessage());
@@ -42,19 +42,19 @@ class AssociativeArrayTest {
 
     @Test
     void add_MustReturnNull_ForNewNode() {
-        AssociativeArray<Integer,String> array = new AssociativeArray<>();
+        AssociativeArray<Integer, String> array = new AssociativeArray<>();
         String actual = array.add(0, "First");
         String expected = null;
         int actualSize = array.size();
         int expectedSize = 1;
         Assert.assertEquals(expected, actual);
         Assert.assertTrue(array.get(0).equals("First"));
-        Assert.assertEquals(expectedSize,expectedSize);
+        Assert.assertEquals(expectedSize, expectedSize);
     }
 
     @Test
     void add_MustReturnNull_ForNewNodeWithCollision() {
-        AssociativeArray<Integer,String> array = new AssociativeArray<>();
+        AssociativeArray<Integer, String> array = new AssociativeArray<>();
         array.add(0, "First");
         String actual = array.add(16, "Second");
         String expected = null;
@@ -62,12 +62,12 @@ class AssociativeArrayTest {
         int expectedSize = 1;
         Assert.assertEquals(expected, actual);
         Assert.assertTrue(array.get(16).equals("Second"));
-        Assert.assertEquals(expectedSize,expectedSize);
+        Assert.assertEquals(expectedSize, expectedSize);
     }
 
     @Test
     void add_MustReturnValue_ForNewNodeExistingKey() {
-        AssociativeArray<Integer,String> array = new AssociativeArray<>();
+        AssociativeArray<Integer, String> array = new AssociativeArray<>();
         array.add(0, "First");
         String actual = array.add(0, "Second");
         String expected = "First";
@@ -75,15 +75,15 @@ class AssociativeArrayTest {
         int expectedSize = 1;
         Assert.assertEquals(expected, actual);
         Assert.assertTrue(array.get(0).equals("Second"));
-        Assert.assertEquals(expectedSize,expectedSize);
+        Assert.assertEquals(expectedSize, expectedSize);
     }
 
     @Test
     void add_MustGrowTable_ForNewNodeMoreCapacity() {
-        AssociativeArray<Integer,String> array = new AssociativeArray<>(2,1);
-        array.add(0,"0");
-        array.add(1,"1");
-        array.add(2,"2");
+        AssociativeArray<Integer, String> array = new AssociativeArray<>(2, 1);
+        array.add(0, "0");
+        array.add(1, "1");
+        array.add(2, "2");
         int actualSize = array.size();
         int expectedSize = 3;
         int actualCapacity = array.capacity();
@@ -125,7 +125,7 @@ class AssociativeArrayTest {
 
     @Test
     void remove_MustReturnVal_ForMiddleBinInBasket() {
-        associativeArray.add(32,"32");
+        associativeArray.add(32, "32");
         Assert.assertTrue(associativeArray.remove(16).equals("16"));
         int actualSize = associativeArray.size();
         int expectedSize = 3;
@@ -134,7 +134,7 @@ class AssociativeArrayTest {
 
     @Test
     void remove_MustReturnVal_ForEndBinInBasket() {
-        associativeArray.add(32,"32");
+        associativeArray.add(32, "32");
         Assert.assertTrue(associativeArray.remove(32).equals("32"));
         int actualSize = associativeArray.size();
         int expectedSize = 3;
@@ -150,16 +150,28 @@ class AssociativeArrayTest {
     }
 
     @Test
-    void capacity() {
+    void capacity_MustReturnTrue_ForTrueValueCapacity() {
         int actualCapacity = associativeArray.capacity();
         int expectedCapacity = 16;
         Assert.assertEquals(expectedCapacity, actualCapacity);
     }
 
+    void capacity_MustReturnFalse_ForFalseValueCapacity() {
+        int actualCapacity = associativeArray.capacity();
+        boolean equals = 44 == actualCapacity;
+        Assert.assertFalse(equals);
+    }
+
     @Test
-    void size() {
+    void size_MustReturnTrue_ForTrueValueSize() {
         int actualSize = associativeArray.size();
         int expectedSize = 3;
         Assert.assertEquals(expectedSize, actualSize);
+    }
+
+    void size_MustReturnFalse_ForFalseValueSizeArray() {
+        int actualSize = associativeArray.size();
+        boolean equals = 44 == actualSize;
+        Assert.assertFalse(equals);
     }
 }
