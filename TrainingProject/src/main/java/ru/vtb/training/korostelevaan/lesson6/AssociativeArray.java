@@ -1,5 +1,7 @@
 package ru.vtb.training.korostelevaan.lesson6;
 
+import java.util.Objects;
+
 public class AssociativeArray<K, V> {
 
     private static final int DEFAULT_INITIAL_CAPACITY = 16;
@@ -66,7 +68,7 @@ public class AssociativeArray<K, V> {
         }
         int hash = hashCode(key);
         int i = indexPosition(hash);
-        if (isBasketEmpty(i)) {
+        if (!Objects.nonNull(table[i])) {
             table[i] = new Node<>(hash, key, val, null);
             this.size++;
             return null;
@@ -77,8 +79,7 @@ public class AssociativeArray<K, V> {
                     V returnVal = p.value;
                     p.value = val;
                     return returnVal;
-                }
-                if (p.next == null) {
+                } else if (p.next == null) {
                     p.next = new Node<>(hash, key, val, null);
                     return null;
                 } else {
@@ -97,15 +98,15 @@ public class AssociativeArray<K, V> {
     public V get(K key) {
         int hash = hashCode(key);
         int i = indexPosition(hash);
-        if (!isBasketEmpty(i)) {
+        if (Objects.nonNull(table[i])) {
             Node<K, V> p = table[i];
-            do {
+            while (p != null) {
                 if (p.key == key) {
                     return p.value;
                 } else {
                     p = p.next;
                 }
-            } while (p != null);
+            }
         }
         return null;
     }
@@ -123,25 +124,25 @@ public class AssociativeArray<K, V> {
     public V remove(K key) {
         int hash = hashCode(key);
         int i = indexPosition(hash);
-        if (!isBasketEmpty(i)) {
-            Node<K, V> p = table[i];
-            Node<K, V> e = null;
-            do {
-                if (p.key == key) {
-                    V val = p.value;
-                    if (e == null) {
-                        table[i] = p.next;
-                        if (p.next == null) {
+        if (Objects.nonNull(table[i])) {
+            Node<K, V> nodeHead = table[i];
+            Node<K, V> nodePrev = null;
+            while (nodeHead != null) {
+                if (nodeHead.key == key) {
+                    V val = nodeHead.value;
+                    if (nodePrev == null) {
+                        table[i] = nodeHead.next;
+                        if (nodeHead.next == null) {
                             this.size--;
                         }
-                    } else if ((e != null) && (p != null)) {
-                        e.next = p.next;
+                    } else if ((nodePrev != null) && (nodeHead != null)) {
+                        nodePrev.next = nodeHead.next;
                     }
                     return val;
                 }
-                e = p;
-                p = p.next;
-            } while (p != null);
+                nodePrev = nodeHead;
+                nodeHead = nodeHead.next;
+            }
         }
         return null;
     }
@@ -191,10 +192,8 @@ public class AssociativeArray<K, V> {
      * @throws IllegalArgumentException если входное значение loadFactor некорректно
      */
     private float getLoadFactor(float loadFactor) {
-        if ((loadFactor > 0) && (loadFactor <= 1)) {
+        if (loadFactor > 0 && loadFactor <= 1) {
             return loadFactor;
-        } else if (loadFactor > 1) {
-            return 1;
         } else {
             throw new IllegalArgumentException("Specified loadFactor is incorrect: " + loadFactor);
         }
@@ -225,16 +224,6 @@ public class AssociativeArray<K, V> {
     }
 
     /**
-     * Провека путой ли бакет i в хеш-таблице
-     *
-     * @param i бакет в хеш-таблице
-     * @return true если бакет пустой, false иначе
-     */
-    private boolean isBasketEmpty(int i) {
-        return table[i] == null;
-    }
-
-    /**
      * Метод для увеличения размера хеш-таблицы с перераспределением элементов.
      * Он перебирает все элементы текущего хранилища, пересчитывает их индексы, с учетом нового размера,
      * и перераспределяет элементы по новой хеш-таблице
@@ -243,29 +232,50 @@ public class AssociativeArray<K, V> {
         int capacityOld = capacity();
         this.capacity *= 2;
         this.threshold = (int) (this.capacity * this.loadFactor);
+        table = createResizeTable(table);
+    }
+
+    /**
+     * Создание новой таблицы с новой ёмкостью и с перераспределением элементов
+     *
+     * @param oldTable исходная хеш-таблица
+     * @return
+     */
+    private Node<K, V>[] createResizeTable(Node<K, V>[] oldTable){
         Node<K, V>[] tableNew = (Node<K, V>[]) new Node[capacity()];
-        for (int i = 0; i < capacityOld; i++) {
-            if (!isBasketEmpty(i)) {
-                Node<K, V> p = table[i];
+        for (int i = 0; i < oldTable.length; i++) {
+            if (Objects.nonNull(oldTable[i])) {
+                Node<K, V> nodeHead = oldTable[i];
                 int hash, index;
-                do {
-                    hash = p.hash;
+                while (nodeHead != null) {
+                    hash = nodeHead.hash;
                     index = indexPosition(hash);
                     if (tableNew[index] == null) {
-                        tableNew[index] = p;
+                        tableNew[index] = nodeHead;
                     } else {
-                        Node<K, V> e = tableNew[index];
-                        while (e.next != null) {
-                            e = e.next;
-                        }
-                        e.next = p;
+                        Node<K, V> nodeHeadNewTable = searchNodeHead(tableNew, index);
+                        nodeHeadNewTable.next = nodeHead;
                     }
-                    p = p.next;
-                } while (p != null);
+                    nodeHead = nodeHead.next;
+                }
             }
         }
-        //table = (Node<K, V>[]) new Node[capacity()];
-        table = tableNew;
+        return tableNew;
+    }
+
+    /**
+     * Поиск последнего элемента связного списка
+     *
+     * @param table хеш-таблица
+     * @param index позиция в хеш-таблице
+     * @return последний элемент связного списка
+     */
+    private Node<K, V> searchNodeHead(Node<K, V>[] table, int index) {
+        Node<K, V> nodeHead = table[index];
+        while (nodeHead.next != null) {
+            nodeHead = nodeHead.next;
+        }
+        return nodeHead;
     }
 
     /**

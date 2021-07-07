@@ -4,6 +4,7 @@ public class Random {
     private final static int MAX_LIMIT = 10000000;
 
     public static int random() {
-        return (int) (Math.random() * MAX_LIMIT);
+        java.util.Random random = new java.util.Random();
+        return random.nextInt(MAX_LIMIT);
     }
 }
