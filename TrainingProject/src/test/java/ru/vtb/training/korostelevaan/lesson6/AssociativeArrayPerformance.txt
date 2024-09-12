@@ -1,0 +1,15 @@
+-------- Addition to the end --------
+AssociativeArray.add(K key, V val): 878 ms
+HashMap.put(K key, V val): 853 ms
+AssociativeArray.get(K key): 235 ms
+HashMap.get(K key): 116 ms
+AssociativeArray.remove(K key): 100 ms
+HashMap.remove(K key): 132 ms
+-------- Key = "random" -------
+AssociativeArray.add(K key, V val): 385 ms
+HashMap.put(K key, V val): 316 ms
+AssociativeArray.get(K key): 370 ms
+HashMap.get(K key): 279 ms
+AssociativeArray.remove(K key): 363 ms
+HashMap.remove(K key): 263 ms
+-------- etc -------
